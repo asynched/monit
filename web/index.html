@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>APM - Test</title>
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+    <p>
+      Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eum nam
+      obcaecati rerum voluptate dignissimos provident? Voluptates eius dicta
+      aspernatur fugit.
+    </p>
+    <hr />
+    <section>
+      <h2>Lorem ipsum dolor sit amet.</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic, distinctio
+        ex neque est nam rerum dolore expedita iure rem commodi!
+      </p>
+      <ul>
+        <li>Lorem ipsum dolor sit amet consectetur.</li>
+        <li>Iste tenetur quas delectus ex ducimus.</li>
+        <li>Non provident consequuntur voluptate consequatur numquam.</li>
+        <li>A repellendus et quidem necessitatibus veritatis.</li>
+        <li>Optio tenetur voluptatum ratione aut tempora.</li>
+      </ul>
+    </section>
+    <section>
+      <h2>Todos</h2>
+      <ul class="todos"></ul>
+    </section>
+  </body>
+  <script async>
+    const getTodos = async () => {
+      const response = await fetch('https://jsonplaceholder.typicode.com/todos')
+      const data = await response.json()
+      return data
+    }
+
+    getTodos().then((todos) => {
+      const todosList = document.querySelector('.todos')
+      todos.forEach((todo) => {
+        const todoItem = document.createElement('li')
+        todoItem.innerText = todo.title
+        todosList.appendChild(todoItem)
+      })
+    })
+  </script>
+</html>

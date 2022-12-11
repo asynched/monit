@@ -1,0 +1,149 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int    @id() @default(autoincrement())
+  userId   String @map("user_id")
+  deviceId String @map("device_id")
+
+  errorEvents      ErrorEvent[]
+  visibilityEvents VisibilityEvent[]
+  fetchEvents      FetchEvent[]
+  loadEvents       LoadEvent[]
+  viewEvents       ViewEvent[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Device {
+  id      Int    @id() @default(autoincrement())
+  type    String
+  name    String
+  width   Int
+  height  Int
+  browser String
+
+  errorEvents      ErrorEvent[]
+  visibilityEvents VisibilityEvent[]
+  fetchEvents      FetchEvent[]
+  loadEvents       LoadEvent[]
+  viewEvents       ViewEvent[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("devices")
+}
+
+model Website {
+  id       Int    @id() @default(autoincrement())
+  url      String
+  referrer String
+  title    String
+
+  errorEvents      ErrorEvent[]
+  visibilityEvents VisibilityEvent[]
+  fetchEvents      FetchEvent[]
+  loadEvents       LoadEvent[]
+  viewEvents       ViewEvent[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("websites")
+}
+
+model ErrorEvent {
+  id           Int    @id() @default(autoincrement())
+  message      String
+  filename     String
+  lineNumber   Int    @map("line_number")
+  columnNumber Int    @map("column_number")
+
+  userId    Int     @map("user_id")
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  websiteId Int     @map("website_id")
+  website   Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  deviceId  Int     @map("device_id")
+  device    Device  @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("error_events")
+}
+
+model VisibilityEvent {
+  id         Int    @id() @default(autoincrement())
+  state      String
+  screenTime Int    @map("screen_time")
+
+  userId    Int     @map("user_id")
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  websiteId Int     @map("website_id")
+  website   Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  deviceId  Int     @map("device_id")
+  device    Device  @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("visibility_events")
+}
+
+model FetchEvent {
+  id     Int    @id() @default(autoincrement())
+  url    String
+  method String
+  status Int
+  time   Int
+
+  userId    Int     @map("user_id")
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  websiteId Int     @map("website_id")
+  website   Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  deviceId  Int     @map("device_id")
+  device    Device  @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("fetch_events")
+}
+
+model LoadEvent {
+  id   Int @id() @default(autoincrement())
+  time Int
+
+  userId    Int     @map("user_id")
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  websiteId Int     @map("website_id")
+  website   Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  deviceId  Int     @map("device_id")
+  device    Device  @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("load_events")
+}
+
+model ViewEvent {
+  id Int @id() @default(autoincrement())
+
+  userId    Int     @map("user_id")
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  websiteId Int     @map("website_id")
+  website   Website @relation(fields: [websiteId], references: [id], onDelete: Cascade)
+  deviceId  Int     @map("device_id")
+  device    Device  @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("view_events")
+}
